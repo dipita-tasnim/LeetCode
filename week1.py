@@ -96,3 +96,116 @@ def duplicate(arr):
                 return True
     return False    
 print(duplicate([1,2,3,1]))
+
+# or One Loop--> O(n)
+
+def duplicate(arr):
+    seen = {}
+    for i in arr:
+        if i not in seen:
+            seen[i] = 1
+        else:
+            seen[i] += 1
+
+    for i in seen.values():
+        if i > 1:
+            return True
+        else:
+            return False
+
+# or        
+
+# Dict
+
+def duplicate(arr):
+    seen = {}
+    for i in arr:
+        if i in seen:
+            return True
+        else:
+            seen[i] = 1
+    return False 
+
+# set
+
+def duplicate(arr):
+    seen = set()
+    for i in arr:
+        if i in seen:
+            return True
+        else:
+            seen.add(i)
+    return False
+
+# list --O(n^2)
+
+def duplicate(arr):
+    seen = []
+    for i in arr:
+        if i in seen:
+            return True  
+        else:
+            seen.append(i)
+    return False                   
+
+       
+# Note:
+# List → stored in order; to find something, Python checks each item one by one → O(n). for every element → O(n) × O(n) = O(n²).
+# Set / Dict → uses hashing (like an index/address system); it jumps straight to where the item would be → O(1), no scanning.
+# That's the whole reason this topic is called "Arrays & Hashing" — sets and dicts are the "hashing" tools that make lookups instant.
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+
+# Valid Palindrome
+
+# A phrase is a palindrome if, after converting all uppercase letters into lowercase letters and removing all non-alphanumeric characters, it reads the same forward and backward. Alphanumeric characters include letters and numbers.
+# Given a string s, return true if it is a palindrome, or false otherwise. 
+
+# Example 1:
+# Input: s = "A man, a plan, a canal: Panama"
+# Output: true
+# Explanation: "amanaplanacanalpanama" is a palindrome.
+
+# Example 2:
+# Input: s = "race a car"
+# Output: false
+# Explanation: "raceacar" is not a palindrome.
+
+# Example 3:
+# Input: s = " "
+# Output: true
+# Explanation: s is an empty string "" after removing non-alphanumeric characters.
+# Since an empty string reads the same forward and backward, it is a palindrome.
+ 
+
+def is_palindrome(s):
+    forward = ""
+    for i in s:
+        if ("a" <= i <= "z") or ("A" <= i <= "Z") or ("0" <= i <= "9"):
+            forward += i.lower()
+
+    reverse = ""
+    reverse = forward[::-1]
+
+    if forward == reverse:
+        return True
+    else:
+        return False
+    
+# Or--using two pointer (instead of reversing)
+
+def is_palindrome(s):
+    forward = ""
+    for i in s:
+        if ("a" <= i <= "z") or ("A" <= i <= "Z") or ("0" <= i <= "9"):
+            forward += i.lower()
+
+    left = 0
+    right = len(forward) - 1
+
+    while left < right:
+        if forward[left] != forward[right]:
+            return False
+        left += 1
+        right -= 1
+    return True
