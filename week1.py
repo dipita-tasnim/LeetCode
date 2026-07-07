@@ -335,3 +335,76 @@ def merge_sorted_array(nums1, m, nums2, n):
         p -= 1
     return nums1    
 print(merge_sorted_array([1,2,3,0,0,0], 3, [2,5,6], 3))   
+
+#----------------------------------------------------------------------------------------------------------------------------------------
+
+# Group Anagrams
+
+# Given an array of strings strs, group the anagrams together. You can return the answer in any order.
+
+# Example 1:
+# Input: strs = ["eat","tea","tan","ate","nat","bat"]
+# Output: [["bat"],["nat","tan"],["ate","eat","tea"]]
+# Explanation:
+# There is no string in strs that can be rearranged to form "bat".
+# The strings "nat" and "tan" are anagrams as they can be rearranged to form each other.
+# The strings "ate", "eat", and "tea" are anagrams as they can be rearranged to form each other.
+
+# Example 2:
+# Input: strs = [""]
+# Output: [[""]]
+
+# Example 3:
+# Input: strs = ["a"]
+# Output: [["a"]]
+
+def group_anagrams(arr):
+    sorted_arr = []
+    output_arr = []
+    seen = {}
+   
+    for string in arr:
+        s = sorted(string)             # use 'sorted' not 'sort'. 'sort' is only for array. 'sorted' works for string/arr/anything
+        glue_sorted = "".join(s)
+        #sorted_arr.append(glue_sorted) # sorted_arr = ["aet", "aet", "ant", "aet", "ant", "abt"]
+
+        if glue_sorted in seen:
+            seen[glue_sorted].append(string)
+        else:
+            seen[glue_sorted] = [string]    
+
+    for i in seen.values():
+        output_arr.append(i)
+    return output_arr
+    
+print(group_anagrams(["eat","tea","tan","ate","nat","bat"]))
+
+
+#---------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+# Majority Element
+
+# Given an array nums of size n, return the majority element.
+# The majority element is the element that appears more than ⌊n / 2⌋ times. You may assume that the majority element always exists in the array.
+
+# Example 1:
+# Input: nums = [3,2,3]
+# Output: 3
+
+# Example 2:
+# Input: nums = [2,2,1,1,1,2,2]
+# Output: 2
+
+def majority_element(arr):
+    count = {}
+    for i in arr:
+        if i in count:
+            count[i] += 1
+        else:
+            count[i] = 1
+
+    for key in count:
+        if count[key] > len(arr)//2:
+            return key          
+
+print(majority_element([3,2,3]))
