@@ -408,3 +408,103 @@ def majority_element(arr):
             return key          
 
 print(majority_element([3,2,3]))
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------------
+
+# Concatenation of Array
+
+# Given an integer array nums of length n, you want to create an array ans of length 2n where ans[i] == nums[i] and ans[i + n] == nums[i] for 0 <= i < n (0-indexed).
+# Specifically, ans is the concatenation of two nums arrays.
+# Return the array ans.
+
+# Example 1:
+# Input: nums = [1,2,1]
+# Output: [1,2,1,1,2,1]
+# Explanation: The array ans is formed as follows:
+# - ans = [nums[0],nums[1],nums[2],nums[0],nums[1],nums[2]]
+# - ans = [1,2,1,1,2,1]
+
+# Example 2:
+# Input: nums = [1,3,2,1]
+# Output: [1,3,2,1,1,3,2,1]
+# Explanation: The array ans is formed as follows:
+# - ans = [nums[0],nums[1],nums[2],nums[3],nums[0],nums[1],nums[2],nums[3]]
+# - ans = [1,3,2,1,1,3,2,1]
+
+def concate_array(arr):
+    ans = []
+    for i in arr:
+        ans.append(i)
+    for i in arr:
+        ans.append(i)
+    return ans
+print(concate_array([1, 2, 1]))        
+
+# or ---in one loop
+# Note: two individual loops (not nested) and just one single loop cover same complexity. So, either one process can be used. 
+
+def concate_array(arr):
+    ans = [0] * (2* len(arr))
+    index = 0
+    idx = 0
+    for i in range(len(ans)):
+        if i < len(arr):
+            ans[index] = (arr[i])
+            index += 1
+        else:
+            ans[index] = (ans[idx])
+            index += 1
+            idx += 1    
+    return ans
+print(concate_array([1,2,1]))        
+
+# Or (simpler)
+
+def concate_array(arr):
+    n = len(arr)
+    ans = [0] * (2 * n)
+
+    for i in range(n):
+        ans[i] = arr[i]      # first half
+        ans[i + n] = arr[i]  # second half
+    return ans
+print(concate_array([1,2,1]))   
+
+#---------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+# Remove Element
+
+# Given an integer array nums and an integer val, remove all occurrences of val in nums in-place. The order of the elements may be changed. Then return the number of elements in nums which are not equal to val.
+# Consider the number of elements in nums which are not equal to val be k, to get accepted, you need to do the following things:
+# Change the array nums such that the first k elements of nums contain the elements which are not equal to val. The remaining elements of nums are not important as well as the size of nums.
+# Return k.
+
+# Example 1:
+# Input: nums = [3,2,2,3], val = 3
+# Output: 2, nums = [2,2,_,_]
+# Explanation: Your function should return k = 2, with the first two elements of nums being 2.
+# It does not matter what you leave beyond the returned k (hence they are underscores).
+
+# Example 2:
+# Input: nums = [0,1,2,2,3,0,4,2], val = 2
+# Output: 5, nums = [0,1,4,0,3,_,_,_]
+# Explanation: Your function should return k = 5, with the first five elements of nums containing 0, 0, 1, 3, and 4.
+# Note that the five elements can be returned in any order.
+# It does not matter what you leave beyond the returned k (hence they are underscores).
+
+def remove_element(arr, val):
+    index = 0
+    for i in range(len(arr)):
+        if arr[i] != val:
+            arr[index] = arr[i]
+            index += 1
+    return index, arr        
+print(remove_element([0,1,2,2,3,0,4,2], 2))        
+
+# two-pointer approach overwrites the front with kept elements but never touches the tail. So old values (including 2's) stay behind at the end — untouched but harmless:
+# only the first k elements matter
+# Your output is (5, [0, 1, 3, 0, 4, 0, 4, 2]).
+
+# k = 5
+# The first 5 elements are [0, 1, 3, 0, 4] → all non-2 
+# The rest — [0, 4, 2] at positions 5, 6, 7 — are leftover garbage that doesn't matter. Those are the "underscores" from the problem
