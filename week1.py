@@ -508,3 +508,102 @@ print(remove_element([0,1,2,2,3,0,4,2], 2))
 # k = 5
 # The first 5 elements are [0, 1, 3, 0, 4] → all non-2 
 # The rest — [0, 4, 2] at positions 5, 6, 7 — are leftover garbage that doesn't matter. Those are the "underscores" from the problem
+
+
+#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+# Squares of a Sorted Array
+
+# Given an integer array nums sorted in non-decreasing order, return an array of the squares of each number sorted in non-decreasing order.
+
+# Example 1:
+# Input: nums = [-4,-1,0,3,10]
+# Output: [0,1,9,16,100]
+# Explanation: After squaring, the array becomes [16,1,0,9,100].
+# After sorting, it becomes [0,1,9,16,100].
+
+# Example 2:
+# Input: nums = [-7,-3,2,3,11]
+# Output: [4,9,9,49,121]
+
+def squared_sorted(nums):
+
+    squared = []
+    for i in nums:
+        squared.append(i**2)
+    
+    squared.sort()
+    return squared
+
+print(squared_sorted([-4,-1,0,3,10]))
+
+# Or--two pointer sorting (faster)
+
+def squared_sorted(nums):
+    n = len(nums)
+    result = [0] * n
+    left = 0
+    right = n - 1
+    idx = n - 1
+
+    while left <= right:
+        left_square = nums[left] ** 2
+        right_square = nums[right] ** 2
+
+        if left_square > right_square:
+            result[idx] = left_square
+            left += 1
+        else:
+            result[idx] = right_square
+            right -= 1
+        idx -= 1
+    return result        
+
+print(squared_sorted([-4,-1,0,3,10]))
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+# Plus One
+
+# You are given a large integer represented as an integer array digits, where each digits[i] is the ith digit of the integer. The digits are ordered from most significant to least significant in left-to-right order. The large integer does not contain any leading 0's.
+# Increment the large integer by one and return the resulting array of digits.
+
+# Example 1:
+# Input: digits = [1,2,3]
+# Output: [1,2,4]
+# Explanation: The array represents the integer 123.
+# Incrementing by one gives 123 + 1 = 124.
+# Thus, the result should be [1,2,4].
+
+# Example 2:
+# Input: digits = [4,3,2,1]
+# Output: [4,3,2,2]
+# Explanation: The array represents the integer 4321.
+# Incrementing by one gives 4321 + 1 = 4322.
+# Thus, the result should be [4,3,2,2].
+
+# Example 3:
+# Input: digits = [9]
+# Output: [1,0]
+# Explanation: The array represents the integer 9.
+# Incrementing by one gives 9 + 1 = 10.
+# Thus, the result should be [1,0].
+
+def plus_one(digits):
+    s = ""
+    res = []
+    for i in digits:
+        s += str(i)
+    print(s) 
+
+    plus = int(s) + 1
+    plus_s = str(plus)
+
+    for i in plus_s:
+        res.append(int(i))
+    return res    
+
+print(plus_one([1, 2, 3]))
+
+
+#------------------------------------------Week 1 Done--------------------------------------------------------
