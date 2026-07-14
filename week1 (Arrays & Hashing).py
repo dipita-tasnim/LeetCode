@@ -4,24 +4,26 @@
 #You may assume that each input would have exactly one solution, and you may not use the same element twice.
 #You can return the answer in any order.
 
-def twoSum(arr, target):
-    for i in range(len(arr)):
-        for j in range(i+1, len(arr)):
-            if arr[i] + arr[j] == target:
-                return (i, j)
-                
-print(twoSum([2,7,11,15], 9))
-
-# or One Loop--> O(n)
+# One Loop--> O(n)
 
 def twoSum(arr, target):
-    seen = {} # seen has {value:index}
+    seen = {} # seen = {value:index}
     for i in range(len(arr)):
         complement = target - arr[i]  # complement has value
         if complement in seen:
             return (seen[complement], i)
         seen[arr[i]] = i
 
+print(twoSum([2,7,11,15], 9))
+
+# or
+
+def twoSum(arr, target):
+    for i in range(len(arr)):
+        for j in range(i+1, len(arr)):
+            if arr[i] + arr[j] == target:
+                return (i, j)
+                
 print(twoSum([2,7,11,15], 9))
 
 
@@ -39,16 +41,7 @@ print(twoSum([2,7,11,15], 9))
 # Input: s = "rat", t = "car"
 # Output: false
 
-def anagram(string1, string2):
-    if len(string1) != len(string2):
-        return False
-    elif sorted(string1) == sorted(string2):
-        return True
-    else:
-        return False
-print(anagram('anagram', 'nagaram'))
-
-# or One Loop--> O(n)
+# One Loop--> O(n)
 
 def anagram(s1, s2):
     if len(s1) != len(s2):
@@ -71,7 +64,20 @@ def anagram(s1, s2):
     if count1 == count2:
         return True
     else:
-        return False                       
+        return False  
+    
+# Or    
+
+def anagram(string1, string2):
+    if len(string1) != len(string2):
+        return False
+    elif sorted(string1) == sorted(string2):
+        return True
+    else:
+        return False
+print(anagram('anagram', 'nagaram'))
+
+                     
 
 #------------------------------------------------------------------------------------------------------------------
 
@@ -89,15 +95,18 @@ def anagram(s1, s2):
 # Input: nums = [1,2,3,4]
 # Output: false
 
-def duplicate(arr):
-    for i in range(len(arr)):
-        for j in range(i+1, len(arr)):
-            if arr[i] == arr[j]:
-                return True
-    return False    
-print(duplicate([1,2,3,1]))
+# Dict
 
-# or One Loop--> O(n)
+def duplicate(arr):
+    seen = {}
+    for i in arr:
+        if i in seen:
+            return True
+        else:
+            seen[i] = 1
+    return False 
+
+# or
 
 def duplicate(arr):
     seen = {}
@@ -113,19 +122,6 @@ def duplicate(arr):
         else:
             return False
 
-# or        
-
-# Dict
-
-def duplicate(arr):
-    seen = {}
-    for i in arr:
-        if i in seen:
-            return True
-        else:
-            seen[i] = 1
-    return False 
-
 # set
 
 def duplicate(arr):
@@ -136,6 +132,7 @@ def duplicate(arr):
         else:
             seen.add(i)
     return False
+
 
 # list --O(n^2)
 
@@ -153,6 +150,16 @@ def duplicate(arr):
 # List → stored in order; to find something, Python checks each item one by one → O(n). for every element → O(n) × O(n) = O(n²).
 # Set / Dict → uses hashing (like an index/address system); it jumps straight to where the item would be → O(1), no scanning.
 # That's the whole reason this topic is called "Arrays & Hashing" — sets and dicts are the "hashing" tools that make lookups instant.
+
+# Or
+
+def duplicate(arr):
+    for i in range(len(arr)):
+        for j in range(i+1, len(arr)):
+            if arr[i] == arr[j]:
+                return True
+    return False    
+print(duplicate([1,2,3,1]))
 
 #-----------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -177,22 +184,7 @@ def duplicate(arr):
 # Explanation: s is an empty string "" after removing non-alphanumeric characters.
 # Since an empty string reads the same forward and backward, it is a palindrome.
  
-
-def is_palindrome(s):
-    forward = ""
-    for i in s:
-        if ("a" <= i <= "z") or ("A" <= i <= "Z") or ("0" <= i <= "9"):
-            forward += i.lower()
-
-    reverse = ""
-    reverse = forward[::-1]
-
-    if forward == reverse:
-        return True
-    else:
-        return False
-    
-# Or--using two pointer (instead of reversing)
+# using two pointer (instead of reversing)
 
 def is_palindrome(s):
     forward = ""
@@ -209,6 +201,23 @@ def is_palindrome(s):
         left += 1
         right -= 1
     return True
+
+# or
+
+def is_palindrome(s):
+    forward = ""
+    for i in s:
+        if ("a" <= i <= "z") or ("A" <= i <= "Z") or ("0" <= i <= "9"):
+            forward += i.lower()
+
+    reverse = ""
+    reverse = forward[::-1]
+
+    if forward == reverse:
+        return True
+    else:
+        return False
+    
 
 #---------------------------------------------------------------------------------------------------------
 
@@ -238,7 +247,7 @@ def profit(arr):
             min_price = price
         elif price - min_price > max_profit:
             max_profit = (price - min_price)      
-    return max_profit   
+    return max_profit                  
 
 #------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -309,21 +318,12 @@ print(reverse_string(["h","e","l","l","o"]))
 # The result of the merge is [1].
 # Note that because m = 0, there are no elements in nums1. The 0 is only there to ensure the merge result can fit in nums1.
 
-def merge_sorted_array(nums1, m, nums2, n):
-    for i in range(n):
-        nums1[m+i] = nums2[i]
-    nums1.sort()
-    return nums1    
-
-print(merge_sorted_array([1,2,3,0,0,0], 3, [2,5,6], 3))
-
-
-# or---3 pointer (for learning purpose)
+# 3 pointer (for learning purpose)
 
 def merge_sorted_array(nums1, m, nums2, n):
-    p1 = m - 1      # last position in real nums1
-    p2 = n - 1      # last position in nums2
-    p = m + n - 1   # last position in resulted nums1
+    p1 = m - 1      # last idx position in real nums1
+    p2 = n - 1      # last idx position in nums2
+    p = m + n - 1   # last idx position in resulted nums1
 
     while p2 >= 0: # while nums2 still has element
         if p1 >= 0 and nums1[p1] > nums2[p2]: 
@@ -334,7 +334,20 @@ def merge_sorted_array(nums1, m, nums2, n):
             p2 -= 1
         p -= 1
     return nums1    
-print(merge_sorted_array([1,2,3,0,0,0], 3, [2,5,6], 3))   
+print(merge_sorted_array([1,2,3,0,0,0], 3, [2,5,6], 3))  
+
+# or
+
+def merge_sorted_array(nums1, m, nums2, n):
+    for i in range(n):
+        nums1[m+i] = nums2[i]
+    nums1.sort()
+    return nums1    
+
+print(merge_sorted_array([1,2,3,0,0,0], 3, [2,5,6], 3))
+
+
+      
 
 #----------------------------------------------------------------------------------------------------------------------------------------
 
@@ -359,7 +372,6 @@ print(merge_sorted_array([1,2,3,0,0,0], 3, [2,5,6], 3))
 # Output: [["a"]]
 
 def group_anagrams(arr):
-    sorted_arr = []
     output_arr = []
     seen = {}
    
@@ -509,7 +521,6 @@ print(remove_element([0,1,2,2,3,0,4,2], 2))
 # The first 5 elements are [0, 1, 3, 0, 4] → all non-2 
 # The rest — [0, 4, 2] at positions 5, 6, 7 — are leftover garbage that doesn't matter. Those are the "underscores" from the problem
 
-
 #------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 # Squares of a Sorted Array
@@ -526,18 +537,7 @@ print(remove_element([0,1,2,2,3,0,4,2], 2))
 # Input: nums = [-7,-3,2,3,11]
 # Output: [4,9,9,49,121]
 
-def squared_sorted(nums):
-
-    squared = []
-    for i in nums:
-        squared.append(i**2)
-    
-    squared.sort()
-    return squared
-
-print(squared_sorted([-4,-1,0,3,10]))
-
-# Or--two pointer sorting (faster)
+# two pointer sorting (faster)
 
 def squared_sorted(nums):
     n = len(nums)
@@ -560,6 +560,21 @@ def squared_sorted(nums):
     return result        
 
 print(squared_sorted([-4,-1,0,3,10]))
+
+# Or
+
+def squared_sorted(nums):
+
+    squared = []
+    for i in nums:
+        squared.append(i**2)
+    
+    squared.sort()
+    return squared
+
+print(squared_sorted([-4,-1,0,3,10]))
+
+
 
 #-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 

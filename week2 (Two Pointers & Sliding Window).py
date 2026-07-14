@@ -45,7 +45,7 @@ def two_sum_sorted(numbers, target):
 
         if total == target:
             return [left + 1, right + 1]
-        elif total < target:
+        elif total < target:  # important
             left += 1
         elif total > target:
             right -= 1    
@@ -67,7 +67,7 @@ print(two_sum_sorted([2,3,4], 6))
 # Input: nums = [0]
 # Output: [0]
 
-def move_zeros(nums):
+def move_zeros(nums):  # for handling two consequetive zeros- need slow, fast pointer to swap with.
     slow = 0
     fast = 0
     while fast < len(nums):
@@ -77,3 +77,107 @@ def move_zeros(nums):
         fast += 1    
     return nums   
 print(move_zeros([0,1,0,3,12]))
+
+#----------------------------------------------------------------------------------------------------------------------------------------------------------
+
+# 3Sum
+
+# Given an integer array nums, return all the triplets [nums[i], nums[j], nums[k]] such that i != j, i != k, and j != k, and nums[i] + nums[j] + nums[k] == 0.
+# Notice that the solution set must not contain duplicate triplets.
+
+# Example 1:
+# Input: nums = [-1,0,1,2,-1,-4]
+# Output: [[-1,-1,2],[-1,0,1]]
+# Explanation: 
+# nums[0] + nums[1] + nums[2] = (-1) + 0 + 1 = 0.
+# nums[1] + nums[2] + nums[4] = 0 + 1 + (-1) = 0.
+# nums[0] + nums[3] + nums[4] = (-1) + 2 + (-1) = 0.
+# The distinct triplets are [-1,0,1] and [-1,-1,2].
+# Notice that the order of the output and the order of the triplets does not matter.
+
+# Example 2:
+# Input: nums = [0,1,1]
+# Output: []
+# Explanation: The only possible triplet does not sum up to 0.
+
+# Example 3:
+# Input: nums = [0,0,0]
+# Output: [[0,0,0]]
+# Explanation: The only possible triplet sums up to 0.   
+
+
+# for not considering duplicate triplets, we will use set as set by default keeps only unique touples.
+# 3Sum needed 2 loops(nested-1 outer). similarly if 4Sum- 3 loops(nested- 2 outer)
+# at first sorting so that we can use two pointer (efficient approach- faster)
+
+def three_sum(nums):
+    nums.sort()
+    result = set()
+
+    for i in range(len(nums)):
+        left = i + 1
+        right = len(nums) - 1
+
+        while left < right:
+            if nums[i] + nums[left] + nums[right] == 0:
+                result.add((nums[i], nums[left], nums[right])) # touple
+
+                left += 1
+                right -= 1
+
+            elif nums[i] + nums[left] + nums[right] < 0:
+                left += 1
+            else:
+                right -= 1
+
+    final = []
+    for i in result:
+        final.append(list(i))
+    return final
+
+print(three_sum([-1,0,1,2,-1,-4]))                    
+
+
+#------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+# Container With Most Water
+
+# You are given an integer array height of length n. There are n vertical lines drawn such that the two endpoints of the ith line are (i, 0) and (i, height[i]).
+
+# Find two lines that together with the x-axis form a container, such that the container contains the most water.
+# Return the maximum amount of water a container can store.
+# Notice that you may not slant the container.
+
+# Example 1:
+# Input: height = [1,8,6,2,5,4,8,3,7]
+# Output: 49
+# Explanation: The above vertical lines are represented by array [1,8,6,2,5,4,8,3,7]. In this case, the max area of water (blue section) the container can contain is 49.
+
+# Example 2:
+# Input: height = [1,1]
+# Output: 1
+
+# Logic Note: max area will come combination of height and width both, not only with max two heights. such area that water should not overload and keep as much high as it can be kept, width should be maximized.
+# Here, we will use two pointer. Two pointer is not only for sorted array. it is used in case such that we can safely eliminate one end each step.
+
+def max_area(height):
+    left = 0
+    right = len(height) - 1
+    best = 0
+
+    while left < right:
+        h = min(height[left], height[right]) # shorter line limits the water
+        w = right - left                     # width between them
+        area = h * w
+        if area > best:
+            best = area
+
+        if height[left] < height[right]:     # move the shorter line inward
+            left += 1
+        else:
+            right -= 1
+    return best              
+  
+print(max_area([1,8,6,2,5,4,8,3,7]))   # 49
+print(max_area([1,1]))                  # 1
+print(max_area([1,2,1]))                # 2
