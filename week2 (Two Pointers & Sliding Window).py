@@ -369,3 +369,48 @@ def remove_duplicate(nums):
     return index
 
 print(remove_duplicate([1,1,2]))
+
+#-------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+# Valid Palindrome II
+
+# Given a string s, return true if the s can be palindrome after deleting at most one character from it.
+
+# Example 1:
+# Input: s = "aba"
+# Output: true
+
+# Example 2:
+# Input: s = "abca"
+# Output: true
+# Explanation: You could delete the character 'c'.
+
+# Example 3:
+# Input: s = "abc"
+# Output: false
+
+# Note: After "delete" one character, you must verify the ENTIRE remaining substring is a palindrome with no further deletions allowed.
+
+def valid_palindrome(s):
+    def is_palindrome(left, right): # check a range fully, no deletion part        
+        while left < right:
+            if s[left] != s[right]:
+                return False
+            else:
+                left += 1
+                right -= 1
+        return True
+
+    left = 0
+    right = len(s) - 1
+
+    while left < right:
+        if s[left] == s[right]:
+            left += 1
+            right -= 1
+        else:
+            # one deletion. trying both option. verifying the entire remaining range.
+            return is_palindrome(left+1, right) or is_palindrome(left, right-1)   
+    return True
+
+print(valid_palindrome("abca"))
