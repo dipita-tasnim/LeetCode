@@ -179,3 +179,80 @@ print(numIsIland([
    ["1","1","0","0","0"],
    ["0","0","0","0","0"]
  ]))
+
+
+#--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+# Max Area of Island
+
+# You are given an m x n binary matrix grid. An island is a group of 1's (representing land) connected 4-directionally (horizontal or vertical.) You may assume all four edges of the grid are surrounded by water.
+# The area of an island is the number of cells with a value 1 in the island.
+# Return the maximum area of an island in grid. If there is no island, return 0.
+
+# Example 1:
+# Input: grid = [[0,0,1,0,0,0,0,1,0,0,0,0,0],[0,0,0,0,0,0,0,1,1,1,0,0,0],[0,1,1,0,1,0,0,0,0,0,0,0,0],[0,1,0,0,1,1,0,0,1,0,1,0,0],[0,1,0,0,1,1,0,0,1,1,1,0,0],[0,0,0,0,0,0,0,0,0,0,1,0,0],[0,0,0,0,0,0,0,1,1,1,0,0,0],[0,0,0,0,0,0,0,1,1,0,0,0,0]]
+# Output: 6
+# Explanation: The answer is not 11, because the island must be connected 4-directionally.
+
+# Example 2:
+# Input: grid = [[0,0,0,0,0,0,0,0]]
+# Output: 0
+
+def maxAreaOfIsland(grid):
+    rows = len(grid)
+    cols = len(grid[0])
+    count = 0
+    max_area = 0
+
+    def sink(r, c):
+        nonlocal count
+        if r < 0 or r >= rows or c < 0 or c >= cols:
+            return 
+
+        if grid[r][c] != 1:
+            return 
+
+        grid[r][c] = 0
+        count += 1
+
+        sink(r + 1, c)
+        sink(r - 1, c)
+        sink(r, c + 1)
+        sink(r, c - 1)
+
+    for r in range(rows):
+        for c in range(cols):
+            if grid[r][c] == 1:
+                count = 0
+                sink(r, c)
+
+                if count > max_area:
+                    max_area = count
+    return max_area                
+
+print(maxAreaOfIsland([[0,0,0,0,0,0,0,0]]))
+
+# Or---instead of using count, return the area directly
+
+def maxAreaOfIsland(grid):
+    rows = len(grid)
+    cols = len(grid[0])
+    max_area = 0
+
+    def area(r, c):
+        if r < 0 or r >= rows or c < 0 or c >= cols:
+            return 0
+
+        if grid[r][c] != 1:
+            return 0
+
+        grid[r][c] = 0
+        return 1 + area(r + 1, c) + area(r - 1, c) + area(r, c + 1) + area(r, c - 1)
+
+    for r in range(rows):
+        for c in range(cols):
+            if grid[r][c] == 1:
+                max_area = max(max_area, area(r,c))
+    return max_area         
+   
+print(maxAreaOfIsland([[0,0,1,0,0,0,0,1,0,0,0,0,0],[0,0,0,0,0,0,0,1,1,1,0,0,0],[0,1,1,0,1,0,0,0,0,0,0,0,0],[0,1,0,0,1,1,0,0,1,0,1,0,0],[0,1,0,0,1,1,0,0,1,1,1,0,0],[0,0,0,0,0,0,0,0,0,0,1,0,0],[0,0,0,0,0,0,0,1,1,1,0,0,0],[0,0,0,0,0,0,0,1,1,0,0,0,0]]))
