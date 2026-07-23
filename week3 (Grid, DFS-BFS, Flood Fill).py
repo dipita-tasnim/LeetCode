@@ -419,3 +419,79 @@ def orangesRotting(grid):
         return -1
 
 print(orangesRotting([[2,1,1],[0,1,1],[1,0,1]]))
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+# Surrounded Regions
+
+# You are given an m x n matrix board containing letters 'X' and 'O', capture regions that are surrounded:
+
+# Connect: A cell is connected to adjacent cells horizontally or vertically.
+# Region: To form a region connect every 'O' cell.
+# Surround: A region is surrounded if none of the 'O' cells in that region are on the edge of the board. Such regions are completely enclosed by 'X' cells.
+# To capture a surrounded region, replace all 'O's with 'X's in-place within the original board. You do not need to return anything.
+ 
+# Example 1:
+# Input: board = [["X","X","X","X"],["X","O","O","X"],["X","X","O","X"],["X","O","X","X"]]
+# Output: [["X","X","X","X"],["X","X","X","X"],["X","X","X","X"],["X","O","X","X"]]
+# Explanation:
+# In the above diagram, the bottom region is not captured because it is on the edge of the board and cannot be surrounded.
+
+# Example 2:
+# Input: board = [["X"]]
+# Output: [["X"]]
+
+
+
+# Note:
+# An O on the edge → can "escape" to the outside → safe, never captured
+# An O connected to an edge O → also safe (part of the escape path)
+# An O with no path to any edge → trapped → captured (→ X)
+
+# problem: for a middle O won't tell you it's connected to an edge O.
+
+# The clever insight (this is the whole trick):
+
+# Flip the problem around. Instead of finding surrounded O's (hard), find the O's that are safe (easy):
+# An O is safe if it's connected to the border. Everything else is surrounded.
+
+# So the plan becomes:
+
+# Start from the border O's and flood fill — mark all connected O's as "safe" (temporarily change them to a marker like 'S').
+# Now every remaining 'O' must be surrounded (it wasn't reachable from any border).
+# Final sweep: turn all 'O' → 'X' (capture them), and turn all 'S' → 'O' (restore the safe ones).
+
+def solve(board):
+    rows = len(board)
+    cols = len(board[0])
+
+    def mark_safe(r, c):
+        if r < 0 or r >= rows or c < 0 or c >= cols:
+            return
+        if board[r][c] != "O":
+            return
+        
+        board[r][c] = "S"       # mark as safe
+
+        mark_safe(r + 1, c)  
+        mark_safe(r - 1, c)
+        mark_safe(r, c + 1)
+        mark_safe( r, c - 1)
+
+    for r in range(rows):
+        mark_safe(r, 0)         # left column
+        mark_safe(r, cols - 1)  # right column
+    for c in range(cols):
+        mark_safe(0, c)         # top row
+        mark_safe(rows - 1, c)  # bottom row
+
+    for r in range(rows):
+        for c in range(cols):
+            if board[r][c] == "O":   # surrounded -> captured
+                board[r][c] = "X"
+            elif board[r][c] == "S": # safe = restored
+                board[r][c] = "O" 
+
+board = [["X","X","X","X"],["X","O","O","X"],["X","X","O","X"],["X","O","X","X"]]
+solve(board)
+print(board)
