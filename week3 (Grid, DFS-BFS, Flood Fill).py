@@ -256,3 +256,166 @@ def maxAreaOfIsland(grid):
     return max_area         
    
 print(maxAreaOfIsland([[0,0,1,0,0,0,0,1,0,0,0,0,0],[0,0,0,0,0,0,0,1,1,1,0,0,0],[0,1,1,0,1,0,0,0,0,0,0,0,0],[0,1,0,0,1,1,0,0,1,0,1,0,0],[0,1,0,0,1,1,0,0,1,1,1,0,0],[0,0,0,0,0,0,0,0,0,0,1,0,0],[0,0,0,0,0,0,0,1,1,1,0,0,0],[0,0,0,0,0,0,0,1,1,0,0,0,0]]))
+
+
+#----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+# Rotting Oranges
+
+# You are given an m x n grid where each cell can have one of three values:
+
+# 0 representing an empty cell,
+# 1 representing a fresh orange, or
+# 2 representing a rotten orange.
+
+# Every minute, any fresh orange that is 4-directionally adjacent to a rotten orange becomes rotten.
+# Return the minimum number of minutes that must elapse until no cell has a fresh orange. If this is impossible, return -1.
+
+# Example 1:
+# Input: grid = [[2,1,1],[1,1,0],[0,1,1]]
+# Output: 4
+
+# Example 2:
+# Input: grid = [[2,1,1],[0,1,1],[1,0,1]]
+# Output: -1
+# Explanation: The orange in the bottom left corner (row 2, column 0) is never rotten, because rotting only happens 4-directionally.
+
+# Example 3:
+# Input: grid = [[0,2]]
+# Output: 0
+# Explanation: Since there are already no fresh oranges at minute 0, the answer is just 0.
+
+# Note:
+# Recursion / DFS can't model "everything at distance 1, then everything at distance 2." 
+# Need level-by-level spreading — that's BFS with a queue. A queue naturally does this because it's FIFO — you finish processing everything at the current level before moving to the next.
+
+
+# Stack vs Queue 
+
+# Traversal	Data structure	Order	Behavior
+# DFS	Stack (LIFO)	last in, first out	goes deep down one path
+# BFS	Queue (FIFO)	first in, first out	spreads level by level
+# And recursion = DFS, because recursion secretly uses the computer's call stack. That's why recursive flood fill goes deep.
+
+# Can you use a stack here? No. LIFO would grab the most recently added orange, diving deep into one direction — so you couldn't tell which minute an orange belongs to. You need FIFO to finish all of minute 1 before starting minute 2. Your original instinct was right.
+
+# My Q/A:
+
+# My correct insight:
+# "In that updated level I need all oranges, and order doesn't matter." [my correct understanding]
+
+# Correct! Within a single minute, the order doesn't matter at all. Processing (1,0) before (0,1) or vice versa gives the same result.
+
+# Where the confusion is:
+# "I need the updated level just pushed, not the previous level."--[my vague understanding]
+
+# Here's the thing: the previous level is already gone. You popped every one of them while processing that minute. They're not sitting in the queue waiting to be skipped.
+
+# So you never need to "reach past" old ones — they've been removed.
+
+# Watch the queue contents in a real trace
+# grid = [[2,1,1],[1,1,0],[0,1,1]]
+
+# Start of minute	Queue contains	Action	Queue after
+# Minute 1	[(0,0)] ← level 0	pop (0,0), add its 2 neighbors	[(1,0),(0,1)]
+# Minute 2	[(1,0),(0,1)] ← only level 1!	pop both, add their neighbors	[(1,1),(0,2)]
+# Minute 3	[(1,1),(0,2)] ← only level 2!	pop both, add neighbors	[(2,1)]
+# Minute 4	[(2,1)] ← only level 3!	pop it, add neighbor	[(2,2)]
+# Notice: at the start of every minute, the queue holds exactly that minute's oranges — nothing older. Because each minute's oranges get popped out during their own minute.
+
+# From Example 1:
+# Minute 1: queue = [(0,0)],  size = 1
+#   pop(0) → (0,0), adds (1,0) and (0,1)
+#   queue = [(1,0), (0,1)]
+
+# Minute 2: size = 2
+#   pop(0) → (1,0)   
+#           adds (0,2)  → queue = [(0,1), (0,2)]
+#   pop(0) → (0,1)  
+#           adds (2,0)  → queue = [(0,2), (2,0)]
+#          This way at first level 1 finished and now level 2 start and continues...pop(0) here, 0 matters which drive to FIFO and lead to complete one by one level serially.
+
+# That's why size = len(queue) works: it measures "how many are in the current level", and everything appended during the loop lands behind them, waiting for next minute.
+
+# So why FIFO specifically?
+# Since order within a level doesn't matter, what does FIFO actually buy you? Level separation.
+
+# With a QUEUE (FIFO):
+
+
+# queue: [level-1 oranges] then [level-2 oranges appended behind]
+#         ↑ popped first          ↑ popped only after level 1 is done
+
+
+def orangesRotting(grid):
+    rows = len(grid)
+    cols = len(grid[0])
+    queue = []
+    fresh = 0
+
+    # find all rotten oranges + count fresh ones
+    for r in range(rows):
+        for c in range(cols):
+            if grid[r][c] == 2:
+                queue.append((r,c))
+            elif grid[r][c] == 1:
+                fresh += 1
+
+    if fresh == 0:
+        return     # output will be same to the input
+
+    minutes = 0
+
+    while len(queue) > 0 and fresh > 0:
+        for i in range(len(queue)):
+            r, c = queue.pop(0)  
+            
+# From Example 1:
+# Minute 1: queue = [(0,0)],  size = 1
+#   pop(0) → (0,0), adds (1,0) and (0,1)
+#   queue = [(1,0), (0,1)]
+
+# Minute 2: size = 2
+#   pop(0) → (1,0)   
+#           adds (0,2)  → queue = [(0,1), (0,2)]
+#   pop(0) → (0,1)  
+#           adds (2,0)  → queue = [(0,2), (2,0)]
+#          This way at first level 1 finished and now level 2 start and continues...pop(0) here, 0 matters which drive to FIFO and lead to complete one by one level serially.
+   
+
+        # Rotting all the adjacents
+            # Down
+            if r + 1 < rows and grid[r+1][c] == 1:
+                grid[r + 1][c] = 2
+                fresh -= 1
+                queue.append((r+1, c))
+
+            # Up
+            if r - 1 >= 0 and grid[r-1][c] == 1:
+                grid[r-1][c] = 2
+                fresh -= 1
+                queue.appen((r-1, c))
+
+            # Right
+            if c + 1 < cols and grid[r][c+1] == 1:
+                grid[r][c+1] = 2
+                fresh -= 1
+                queue.append((r, c+1))
+
+            # Left
+            if c - 1 >= 0 and grid[r][c-1] == 1:
+                grid[r][c-1] = 2
+                fresh -= 1
+                queue.append((r, c-1))
+
+        # after rotting all the adjacents(completion of one level) then increase minute
+        minutes += 1        
+
+    
+    if fresh == 0:
+        return minutes
+    # handling example 2
+    else:
+        return -1
+
+print(orangesRotting([[2,1,1],[0,1,1],[1,0,1]]))
