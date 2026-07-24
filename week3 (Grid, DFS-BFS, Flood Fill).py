@@ -551,3 +551,82 @@ def countSubIslands(grid1, grid2):
                     count += 1   # count Once per island
     return count
 
+#-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+# Island Perimeter
+
+# You are given row x col grid representing a map where grid[i][j] = 1 represents land and grid[i][j] = 0 represents water.
+# Grid cells are connected horizontally/vertically (not diagonally). The grid is completely surrounded by water, and there is exactly one island (i.e., one or more connected land cells).
+# The island doesn't have "lakes", meaning the water inside isn't connected to the water around the island. One cell is a square with side length 1. The grid is rectangular, width and height don't exceed 100. Determine the perimeter of the island.
+
+# Example 1:
+# Input: grid = [[0,1,0,0],[1,1,1,0],[0,1,0,0],[1,1,0,0]]
+# Output: 16
+# Explanation: The perimeter is the 16 yellow stripes in the image above.
+
+# Example 2:
+# Input: grid = [[1]]
+# Output: 4
+
+# Example 3:
+# Input: grid = [[1,0]]
+# Output: 4
+
+# Note :
+
+# Single cell:        Two cells side by side:
+# ┌───┐               ┌───┬───┐
+# │ 1 │  = 4 sides    │ 1 │ 1 │   = 6 sides (not 8!)
+# └───┘               └───┴───┘
+#                      the shared middle wall
+#                      doesn't count for either
+# The rule
+# For each land cell, count how many of its 4 sides face water OR the grid boundary. Add them all up.
+
+# Draw Example 1 and count
+
+# grid = [[0,1,0,0],
+#         [1,1,1,0],
+#         [0,1,0,0],
+#         [1,1,0,0]]
+# Shade the land:
+
+
+# . 🟩 . .
+# 🟩🟩🟩 .
+# . 🟩 . .
+# 🟩🟩 . .
+# Now go cell by cell — count sides facing water/outside:
+
+# Cell	up	      down	 left	 right	exposed sides
+# (0,1)	outside✓ land ✗	water✓	water✓	3
+# (1,0)	water ✓	water ✓	outside✓ land✗	3
+# (1,1)	land ✗	land ✗	land ✗	land✗	0 ← fully surrounded!
+# (1,2)	water ✓	water ✓	land ✗	water✓	3
+# (2,1)	land ✗	land ✗	water ✓	water✓	2
+# (3,0)	water ✓	outside✓ outside✓ land✗ 3
+# (3,1)	land ✗	outside✓ land✗ water✓   2
+# Total = 3+3+0+3+2+3+2 = 16 
+
+# Notice (1,1) contributes 0 — it's surrounded by land on all 4 sides, completely interior.
+
+
+def islandPerimeter(grid):
+    rows = len(grid)
+    cols = len(grid[0])
+    perimeter = 0
+
+    for r in range(rows):
+        for c in range(cols):
+            if grid[r][c] == 1:
+                if r - 1 < 0 or grid[r - 1][c] == 0: # up
+                    perimeter += 1
+                if r + 1  >= rows or grid[r + 1][c] == 0:
+                    perimeter += 1
+                if c - 1 < 0  or grid[r][c - 1] == 0:
+                    perimeter += 1
+                if c + 1 >= cols or grid[r][c + 1] == 0:
+                    perimeter += 1
+    return perimeter
+print(islandPerimeter([[1,0]]))      
+
