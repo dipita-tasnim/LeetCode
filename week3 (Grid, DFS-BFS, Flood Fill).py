@@ -495,3 +495,59 @@ def solve(board):
 board = [["X","X","X","X"],["X","O","O","X"],["X","X","O","X"],["X","O","X","X"]]
 solve(board)
 print(board)
+
+#--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+# Count Sub Islands
+
+# You are given two m x n binary matrices grid1 and grid2 containing only 0's (representing water) and 1's (representing land). An island is a group of 1's connected 4-directionally (horizontal or vertical). Any cells outside of the grid are considered water cells.
+# An island in grid2 is considered a sub-island if there is an island in grid1 that contains all the cells that make up this island in grid2.
+# Return the number of islands in grid2 that are considered sub-islands.
+
+# Example 1:
+# Input: grid1 = [[1,1,1,0,0],[0,1,1,1,1],[0,0,0,0,0],[1,0,0,0,0],[1,1,0,1,1]], grid2 = [[1,1,1,0,0],[0,0,1,1,1],[0,1,0,0,0],[1,0,1,1,0],[0,1,0,1,0]]
+# Output: 3
+# Explanation: In the picture above, the grid on the left is grid1 and the grid on the right is grid2.
+# The 1s colored red in grid2 are those considered to be part of a sub-island. There are three sub-islands.
+
+# Example 2:
+# Input: grid1 = [[1,0,1,0,1],[1,1,1,1,1],[0,0,0,0,0],[1,1,1,1,1],[1,0,1,0,1]], grid2 = [[0,0,0,0,0],[1,1,1,1,1],[0,1,0,1,0],[0,1,0,1,0],[1,0,0,0,1]]
+# Output: 2 
+# Explanation: In the picture above, the grid on the left is grid1 and the grid on the right is grid2.
+# The 1s colored red in grid2 are those considered to be part of a sub-island. There are two sub-islands.
+
+def countSubIslands(grid1, grid2):
+    count = 0
+    rows = len(grid2)
+    cols = len(grid2[0])
+    flag = True
+
+    def sink(r, c):
+        nonlocal flag
+
+        if r < 0 or r >= rows or c < 0 or c >= cols:
+            return
+
+        if grid2[r][c] != 1:     # water or already sunk
+            return
+
+        if grid2[r][c] == 1:
+            grid2[r][c] = 0      # sink it
+
+        if grid1[r][c] != 1:
+            flag = False 
+
+        sink(r + 1, c)           # sink it in 4 directions
+        sink(r - 1, c)
+        sink(r, c + 1)
+        sink(r, c - 1) 
+
+    for r in range(rows):
+        for c in range(cols):
+            if grid2[r][c] == 1:
+                flag = True      # Reset for this island
+                sink(r, c)       # for nested function, we should keep senk function body before it is called(upper)
+                if flag == True: # all cells passed?
+                    count += 1   # count Once per island
+    return count
+
