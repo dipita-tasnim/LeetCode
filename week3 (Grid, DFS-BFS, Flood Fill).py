@@ -630,3 +630,74 @@ def islandPerimeter(grid):
     return perimeter
 print(islandPerimeter([[1,0]]))      
 
+#-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+# Number of Closed Islands
+
+# Given a 2D grid consists of 0s (land) and 1s (water).  An island is a maximal 4-directionally connected group of 0s and a closed island is an island totally (all left, top, right, bottom) surrounded by 1s.
+# Return the number of closed islands.
+
+# Example 1:
+# Input: grid = [[1,1,1,1,1,1,1,0],[1,0,0,0,0,1,1,0],[1,0,1,0,1,1,1,0],[1,0,0,0,0,1,0,1],[1,1,1,1,1,1,1,0]]
+# Output: 2
+# Explanation: 
+# Islands in gray are closed because they are completely surrounded by water (group of 1s).
+
+# Example 2:
+# Input: grid = [[0,0,1,0,0],[0,1,0,1,0],[0,1,1,1,0]]
+# Output: 1
+
+# Example 3:
+# Input: grid = [[1,1,1,1,1,1,1],
+#                [1,0,0,0,0,0,1],
+#                [1,0,1,1,1,0,1],
+#                [1,0,1,0,1,0,1],
+#                [1,0,1,1,1,0,1],
+#                [1,0,0,0,0,0,1],
+#                [1,1,1,1,1,1,1]]
+# Output: 2
+
+
+# trick to catch:
+# A closed island is one that does NOT touch the border. If any part of the island reaches an edge, it's open (not closed).
+
+# First, eliminate all border-touching islands. Flood fill every land cell (0) on the border → sink them (they can't be closed).
+# Then count the remaining islands — anything left is guaranteed to be closed (it never touched an edge).
+
+def closedIsland(grid):
+    rows = len(grid)
+    cols = len(grid[0])
+
+    def sink(r, c):
+        if r < 0 or r >= rows or c < 0 or c >= cols:
+            return
+        if grid[r][c] != 0:  # water or already sunk
+            return
+
+        grid[r][c] = 1
+
+        sink(r + 1, c)
+        sink(r - 1, c)
+        sink(r, c + 1)
+        sink(r, c - 1)
+
+    # sink all land connected to the border (these cannot be closed)
+    for r in range(rows):
+        sink(r, 0)
+        sink(r, cols - 1)
+
+    for c in range(cols):
+        sink(0, c)
+        sink(rows - 1, c)
+
+    # now count the remaining islands - all are closed
+    count = 0
+    for r in range(rows):
+        for c in range(cols):
+            if grid[r][c] == 0:  # leftover land = colsed land
+                count += 1
+                sink(r, c)       # sink it so it's counted once    
+    return count
+
+print(closedIsland([[0,0,1,0,0],[0,1,0,1,0],[0,1,1,1,0]]))
+
