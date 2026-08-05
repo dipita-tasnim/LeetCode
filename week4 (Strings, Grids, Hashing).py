@@ -359,3 +359,111 @@ def findCircleNum(isConnected):
             visited.add(city)
             dfs(city)       # visit the whole province
     return count             
+
+#---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+# Top K Frequent Elements
+
+# Given an integer array nums and an integer k, return the k most frequent elements. You may return the answer in any order.
+
+# Example 1:
+# Input: nums = [1,1,1,2,2,3], k = 2    # k = 2 means top 2 highest number should be the output
+# Output: [1,2]
+
+# Example 2:
+# Input: nums = [1], k = 1
+# Output: [1]
+
+# Example 3:
+# Input: nums = [1,2,1,2,1,2,3,1,3,2], k = 2
+# Output: [1,2]
+
+def topKFrequent(nums, k):
+    count = {}
+    # sorted_count = []
+    result = []
+
+    for i in nums:
+        if i in count:
+            count[i] += 1
+        else:
+            count[i] = 1
+    # count = {1:4, 2:4, 3:2}        
+
+    # keys sorted by value (descending)
+    sorted_count = sorted(count, key = count.get, reverse=True)  # [1, 2, 3]
+
+    for i in range(k):
+        result.append(sorted_count[i])
+    return result
+
+print(topKFrequent([1], 1))    
+
+#--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+# Longest Consecutive Sequence
+
+# Given an unsorted array of integers nums, return the length of the longest consecutive elements sequence.
+
+# You must write an algorithm that runs in O(n) time.
+
+# Example 1:
+# Input: nums = [100,4,200,1,3,2]
+# Output: 4
+# Explanation: The longest consecutive elements sequence is [1, 2, 3, 4]. Therefore its length is 4.
+
+# Example 2:
+# Input: nums = [0,3,7,2,5,8,4,6,0,1]
+# Output: 9
+
+# Example 3:
+# Input: nums = [1,0,1,2]
+# Output: 3
+
+# O(n)--without sorting, also using a faster approach
+def longestConsecutive(nums):
+    num_set = set(nums)
+    longest = 0
+
+    for num in num_set:
+        if num - 1 not in num_set:  # here lies the reset technique
+            length = 1
+            while (num + length) in num_set:
+                length += 1
+            longest = max(longest, length)
+    return longest            
+
+# Full trace: [100, 4, 200, 1, 3, 2]
+# num_set = {100, 4, 200, 1, 3, 2}
+
+# Go through each number, but only count from starts:
+
+# num	Is num-1 missing? (start?)	Action
+# 100	is 99 present? No → start	count: 101 present? No → length 1
+# 4	is 3 present? Yes → not a start	skip
+# 200	is 199 present? No → start	count: 201? No → length 1
+# 1	is 0 present? No → start	count: 2✓, 3✓, 4✓, 5✗ → length 4 
+# 3	is 2 present? Yes → not a start	skip
+# 2	is 1 present? Yes → not a start	skip
+# Longest = 4 
+
+# Notice: we only did real counting from 100, 200, and 1 — the three run-starts. Numbers 4, 3, 2 were skipped instantly because they're in the middle of runs. That's why it's fast.
+
+
+# or (not O(n))
+
+def longestConsecutive(nums):
+    sorted_nums = sorted(nums)
+    longest = 1
+    length = 1
+
+    for i in range(1, len(sorted_nums)):
+        if sorted_nums[i] == sorted_nums[i-1]:
+            continue
+        elif (sorted_nums[i] - sorted_nums[i-1]) == 1:
+            length += 1     # consecutive so extend 
+            longest = max(longest, length)  # remember the best
+        else:
+            current = 1   # reset    
+    return longest        
+
